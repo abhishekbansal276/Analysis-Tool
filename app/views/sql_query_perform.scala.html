@@ -1,0 +1,102 @@
+@(personDataList: Seq[rdd_scala_code_for_generating_graphs.Person], data: Vector[Map[String, Any]], tableName: String)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="eng">
+<head>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/sql_page.css")">
+</head>
+<body>
+
+<div id="top-bar">
+    <div class="sql-form-container">
+        @helper.form(action = routes.SqlQueryPerformPageController.performSqlQuery(tableName), 'class -> "sql-form") {
+        <div class="form-group">
+            <textarea type="text" id="sqlquery" name="sqlquery" class="form-control" placeholder="Enter a SQL query" required style="width: 300px;
+    padding: 5px;
+    border: 1px solid #B993D6;
+    border-radius: 5px;
+    color: #8CA6DB;"></textarea>
+        </div>
+        @helper.CSRF.formField
+        <button type="submit" class="btn btn-primary" style="padding: 5px; margin-left: 10px;">EXECUTE</button>
+        }
+    </div>
+    <div class="text-container" style="display: flex;
+    justify-content: center;
+    align-items: center;">
+        Use table_name as your table name
+    </div>
+</div>
+
+<div>
+    <div class="table-class">
+        @if(data.nonEmpty) {
+        <table border="1">
+            <thead>
+            <tr>
+                @for((key, _) <- data.head) {
+                <th>@key</th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @for(row <- data) {
+            <tr>
+                @for((_, value) <- row) {
+                <td>@value</td>
+                }
+            </tr>
+            }
+            </tbody>
+        </table>
+        }
+    </div>
+    <div class="table-class">
+        <table>
+            <thead>
+            <tr>
+                <th>Aadhaar_ID</th>
+                <th>First_Name</th>
+                <th>Last_Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Date_of_Birth</th>
+                <th>Occupation</th>
+                <th>Monthly_Income</th>
+                <th>Category</th>
+                <th>Father_Name</th>
+                <th>Mother_Name</th>
+                <th>Street</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Postal_Code</th>
+                <th>Phone</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for(personData <- personDataList) {
+            <tr>
+                <td>@personData.aadhaar_id</td>
+                <td>@personData.person_name.first_name</td>
+                <td>@personData.person_name.second_name</td>
+                <td>@personData.gender</td>
+                <td>@personData.age</td>
+                <td>@personData.dob</td>
+                <td>@personData.occupation</td>
+                <td>@personData.monthly_income</td>
+                <td>@personData.category</td>
+                <td>@personData.father_name</td>
+                <td>@personData.mother_name</td>
+                <td>@personData.address.street</td>
+                <td>@personData.address.city</td>
+                <td>@personData.address.state</td>
+                <td>@personData.address.postalCode</td>
+                <td>@personData.phone</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

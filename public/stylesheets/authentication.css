@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+     background: -webkit-linear-gradient(to right, #8CA6DB, #B993D6);
+                    background: linear-gradient(to right, #8CA6DB, #B993D6);
+                    color: #fff;
+}
+
+.container {
+    width: 320px;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #b395d6;
+}
+
+.no-border {
+    border: none;
+}
+
+.underline {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    border-color: #b395d6;
+}
+
+input:focus {
+    border-color: #b395d6;
+    color: #b395d6;
+}
+
+label {
+    margin-bottom: 5px;
+    color: #b395d6;
+}
+
+input {
+    color: #b395d6;
+}
+
+input, button {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #b395d6;
+    border-radius: 5px;
+}
+
+button {
+     background: -webkit-linear-gradient(to right, #8CA6DB, #B993D6);
+                    background: linear-gradient(to right, #8CA6DB, #B993D6);
+                    color: #fff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #b395d6;
+}

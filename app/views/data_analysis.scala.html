@@ -1,0 +1,107 @@
+@(userId: Int, folderName: String, folderExists: Boolean)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@import play.filters.csrf.CSRF.Token
+@import views.html.helper.CSRF
+
+@main("Analysis Tool") {
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/analysis.css")">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+    @helper.form(action = routes.SqlQueryPerformPageController.sqlQueryPage(folderName.replaceAll(" ", "_").toLowerCase())) {
+        <button type="submit" style="position: fixed; right: 10px; bottom: 50px; height:50px; width: 50px; border:none; background-color: transparent;" class="sql-btn">
+        <img src="@routes.Assets.versioned("images/sqllogo.png")" alt="Logout Image">
+    </button>
+    }
+
+    @helper.form(action = routes.AddEntryController.showAddPage(folderName.replaceAll(" ", "_").toLowerCase())) {
+    <button type="submit" style="position: fixed; right: 13px; bottom: 10px; height:40px; width: 40px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: white; background: -webkit-linear-gradient(to right, #8CA6DB, #B993D6); background: linear-gradient(to right, #8CA6DB, #B993D6);" class="add-btn">
+        <img src="@routes.Assets.versioned("images/add.png")" alt="Logout Image">
+    </button>
+    }
+
+    @if(folderExists) {
+        <div>
+        <div class="first-row-grid">
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/age_distribution.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/age_vs_category_stacked.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/age_vs_gender_stacked.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/age_vs_occupation.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/category_distribution.png")" alt="Profile Image">
+            </div>
+        </div>
+        <div class="second-row" style="display: flex; margin: 10px;">
+            <div class="second-row-item-1" style="display: flex; flex: 1; margin-right: 5px;">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/occupation_distribution.png")" alt="Profile Image" style="max-width: 100%; height: auto;">
+            </div>
+            <div class="second-row-item-2" style="flex: 1; margin-left: 5px;">
+                <div class="first-row-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="grid-item">
+                        <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/entries_per_state.png")" alt="Profile Image" style="max-width: 100%; height: auto;">
+                    </div>
+                    <div class="grid-item">
+                        TODO
+                    </div>
+                    <div class="grid-item">
+                        <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/monthly_income_distribution.png")" alt="Profile Image" style="max-width: 100%; height: auto;">
+                    </div>
+                    <div class="grid-item">
+                        <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/monthly_income_vs_occupation_boxplot.png")" alt="Profile Image" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="first-row-grid" style="margin-top: 0px; padding-top: 0px;">
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/monthly_income_vs_occupation_violinplot.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/gender_distribution.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/occupation_vs_category_stacked.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/top_10_monthly_incomes.png")" alt="Profile Image">
+            </div>
+            <div class="grid-item">
+                <img src="@routes.Assets.versioned(s"images/$userId/$folderName/graphs/total_monthly_income_by_occupation.png")" alt="Profile Image">
+            </div>
+        </div>
+    </div>
+    } else {
+        <div style="display: flex; justify-content: center; color: #b794d6; font-size: 18px; margin: 30px;">
+            Please wait! We are doing analysis on your data, but you can perform queries on your data.
+        </div>
+    }
+
+    <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('jsonFile');
+            const fileNameContainer = document.getElementById('file-name');
+            if (fileInput.files.length > 0) {
+                fileNameContainer.textContent = `${fileInput.files[0].name}`;
+            } else {
+                fileNameContainer.textContent = '';
+            }
+        }
+    </script>
+
+    </body>
+    </html>
+}

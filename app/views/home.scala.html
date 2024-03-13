@@ -1,0 +1,69 @@
+@(userId: Long, tables: Seq[String])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/home.css")">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<div class="top-bar">
+    <div class="dropdown">
+        <button class="dropbtn">YOUR ALL TABLES</button>
+        <div class="dropdown-content">
+            @for(table <- tables) {
+            <li>
+                @helper.form(action = routes.AnalysisController.showAnalysisPage(userId.toInt, table)) {
+                <button type="submit" style="cursor:pointer; border: none; background-color: lightgrey; color: black; padding: 5px; border-radius: 5px; margin:0px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);">@table</button>
+                }
+            </li>
+            }
+            @helper.CSRF.formField
+        </div>
+    </div>
+    <div class="logo">
+        <img src="@routes.Assets.versioned("images/logo.png")" alt="Logout Image">
+    </div>
+
+</div>
+
+<div id="logout-button" style="align-items: center; display: flex;">
+    @helper.form(action = routes.AuthenticationController.logout) {
+    @helper.CSRF.formField
+    <button type="submit" id="logout-btn">
+        <img src="@routes.Assets.versioned("images/logout.png")" alt="Logout Image">
+    </button>
+    }
+</div>
+
+<div class="upload-form">
+    <form action="@routes.HomeController.uploadFile" method="post" enctype="multipart/form-data">
+        <div class="choose-file-button">
+            <label for="jsonFile">Choose JSON File</label>
+            <input type="file" name="jsonFile" id="jsonFile" accept=".json" class="file-input" onchange="displayFileName()" required>
+            <input type="text" name="tableName" id="tableName" placeholder="Enter table name..." required>
+        </div>
+        <span id="file-name"></span>
+
+        @helper.CSRF.formField
+        <button type="submit" class="upload-button"><img src="@routes.Assets.versioned("images/upload.png")" alt="Upload Image"></button>
+    </form>
+</div>
+
+<div style="display: flex; justify-content: center; color: #b794d6; font-size: 14px; margin-right: 300px; margin-left: 300px; margin-top: 80px; text-align: center;">
+    Discover, visualize, and understand your data effortlessly. Upload your JSON file, explore interactive visualizations, perform queries, and unlock actionable insights. Transform your data into intelligence. Start analyzing now!
+</div>
+
+<script>
+    function displayFileName() {
+        const input = document.getElementById('jsonFile');
+        const fileName = input.files[0].name;
+        document.getElementById('file-name').textContent = 'Selected File: ' + fileName;
+    }
+</script>
+
+</body>
+</html>

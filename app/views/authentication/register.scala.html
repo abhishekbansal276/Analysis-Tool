@@ -1,0 +1,35 @@
+@(userForm: Form[User])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@main("Analysis Tool") {
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/authentication.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h2>Registration</h2>
+        @helper.form(action = routes.AuthenticationController.register) {
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="userName" class="form-control no-border underline" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control no-border underline" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="pwd" class="form-control no-border underline" placeholder="Password" required>
+            </div>
+            @helper.CSRF.formField
+            <button type="submit" style="margin-top: 20px;">Register</button>
+        }
+    </div>
+</div>
+</body>
+</html>
+}
