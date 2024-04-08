@@ -1,0 +1,56 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+
+# Authentication related routes
+
+GET     /authentication                                                         controllers.AuthenticationController.showAuthenticationForm
+POST    /sendOtp                                                               controllers.AuthenticationController.sendOtp
+POST    /processRegistration                                                    controllers.AuthenticationController.processRegistration(decryptOtp: String, decryptEmail: String, decryptPassword: String)
+GET     /otp-verification/:encryptOtp/:encryptEmail/:encryptPassword            controllers.AuthenticationController.showOtpForm(encryptOtp: String, encryptEmail: String, encryptPassword: String)
+POST    /login                                                                  controllers.AuthenticationController.login
+POST    /logout                                                                 controllers.AuthenticationController.logout()
+POST    /forgetPassword                                                         controllers.AuthenticationController.forgetPassword()
+GET     /forgetPassword                                                         controllers.AuthenticationController.showForgetPassword()
+
+# Home related routes
+
+GET     /                                                                       controllers.HomeController.home()
+POST    /upload                                                                 controllers.HomeController.uploadFile
+
+# SQL query related routes
+
+GET     /perform-sql-query/:tableName/:pageNumber                               controllers.SqlQueryPerformPageController.sqlQueryPage(tableName: String, pageNumber: Int)
+POST    /executeQuery/:tableName/:pageNumber                                    controllers.SqlQueryPerformPageController.performSqlQuery(tableName:String, pageNumber: Int)
+
+# Analysis related routes
+
+GET     /analysis/:folderName                                                   controllers.AnalysisController.showAnalysisPage(folderName: String)
+GET     /showInteractivePlot                                                    controllers.AnalysisController.showInteractivePlot(plotName: String, foldername: String)
+POST    /reload/:folderName                                                     controllers.AnalysisController.reload(folderName: String)
+
+# Add entry related route
+
+GET     /add-entry/:folderName                                                  controllers.AddEntryController.showAddPage(folderName: String)
+POST    /add-entry/:folderName                                                  controllers.AddEntryController.addEntry(folderName: String)
+POST    /uploadFile                                                             controllers.AddEntryController.uploadFile(folderName: String)
+
+# Show map related route
+
+GET     /map/:folderName                                                        controllers.MapController.showMap(folderName: String)
+
+# Download things related routes
+
+GET     /download/zip/:folderName                                               controllers.AnalysisController.downloadImages(folderName: String)
+GET     /download-csv/:tableName                                                controllers.AnalysisController.downloadCSV(tableName: String)
+
+# Profile routes
+
+GET     /profile                                                                controllers.ProfileController.showProfilePage
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/temp/*file          controllers.Assets.at(path="/tmp", file)

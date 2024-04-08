@@ -1,0 +1,39 @@
+@(htmlString: String, tableName: String, pageNum: Int, pageEntries: Int)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/sql_page.css")">
+    <title>Your data</title>
+</head>
+<body>
+<div class="top">
+    <div class="sql-form">
+        @helper.form(action = routes.SqlQueryPerformPageController.performSqlQuery(tableName, 1), 'class -> "sql-form") {
+        <div class="form-group">
+            <textarea type="text" id="sqlquery" name="sqlquery" class="form-control" placeholder="Enter a SQL query" required style="width: 300px; padding: 5px; border: 1px solid #B993D6; border-radius: 5px; color: #8CA6DB; max-height: 60px;"></textarea>
+        </div>
+        @helper.CSRF.formField
+        <button type="submit" class="btn btn-primary" style="cursor: pointer; padding: 10px; margin-left: 10px; border: none; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); background: #212D63; color: white; border-radius: 5px; font-size: 12px;">EXECUTE</button>
+        }
+    </div>
+
+    <div class="arrow-buttons">
+        @if(pageNum > 1) {
+        <form action="@routes.SqlQueryPerformPageController.sqlQueryPage(tableName, pageNum - 1)" method="get">
+            <button type="submit" class="arrow-button"> &lt; </button>
+        </form>
+        }
+        @if(pageEntries !=0) {
+        <form action="@routes.SqlQueryPerformPageController.sqlQueryPage(tableName, pageNum + 1)" method="get">
+            <button type="submit" class="arrow-button"> &gt; </button>
+        </form>
+        }
+    </div>
+</div>
+<div class="content-container">
+    @Html(htmlString)
+</div>
+</body>
+</html>

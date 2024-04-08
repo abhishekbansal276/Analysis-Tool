@@ -1,0 +1,54 @@
+@(encryptOtp: String, decryptEmail: String, encryptPassword: String, error: Option[String])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@main("Analysis Tool") {
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/otp.css")">
+    </head>
+    <body>
+    <div class="container">
+
+        @if(error.isDefined) {
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span style="font-size: 14px;">@error.get</span>
+        </div>
+        }
+
+        <h2>Verify your Account</h2>
+        <p>
+            We have sent a verification code to @decryptEmail </br>
+            Enter the verification code that you received
+        </p>
+        @helper.form(action = routes.AuthenticationController.processRegistration(encryptOtp, decryptEmail, encryptPassword)) {
+            <div class="code-container">
+                @helper.CSRF.formField
+                <input type="number" class="code" name="otp1" placeholder="0" min="0" max="9" maxlength="1" required>
+                <input type="number" class="code" name="otp2" placeholder="0" min="0" max="9" maxlength="1" required>
+                <input type="number" class="code" name="otp3" placeholder="0" min="0" max="9" maxlength="1" required>
+                <input type="number" class="code" name="otp4" placeholder="0" min="0" max="9" maxlength="1" required>
+                <input type="number" class="code" name="otp5" placeholder="0" min="0" max="9" maxlength="1" required>
+                <input type="number" class="code" name="otp6" placeholder="0" min="0" max="9" maxlength="1" required>
+            </div>
+            <button type="submit" class="check-btn"> Verify </button>
+        }
+    </div>
+    <script>
+        const codes = document.querySelectorAll(".code");
+        codes[0].focus();
+
+        codes.forEach((code, idx) => {
+            code.addEventListener("keydown", (e) => {
+                if( e.key >= 0 && e.key <=9){
+                    codes[idx].value = "";
+                    setTimeout(() => codes[idx+1].focus(),10);
+                }else if( e.key === "Backspace"){
+                    setTimeout(() => codes[idx-1].focus(),10);
+                }
+            })
+        })
+    </script>
+    </body>
+    </html>
+}
