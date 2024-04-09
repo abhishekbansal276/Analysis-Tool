@@ -137,7 +137,7 @@ class SqlQueryPerformPageController @Inject()(cc: ControllerComponents, consumer
             } else if (!isValidTable(q)) {
               Future.successful(BadRequest("SQL query is not performed on the correct table"))
             } else {
-              val dataInTopic = consumer.readFormTopic(topicName)
+              val dataInTopic = consumer.readFromTopic(topicName)
               if (dataInTopic.nonEmpty) {
                 try {
                   val spark = SparkSession.builder()

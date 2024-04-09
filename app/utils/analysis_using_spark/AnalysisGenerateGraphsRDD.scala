@@ -11,7 +11,6 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AnalysisGenerateGraphsRDD @Inject()(consumer: MyConsumer)(implicit ec: ExecutionContext) {
-
   def drawGraphs(topicName: String, user_id: String, folderName: String): Future[Boolean] = {
     val jedis = new Jedis("localhost", 6379)
     val lockKey = s"drawGraphsLock:$user_id"
@@ -44,7 +43,7 @@ class AnalysisGenerateGraphsRDD @Inject()(consumer: MyConsumer)(implicit ec: Exe
   }
 
   private def performAnalysis(topicName: String, user_id: String, folderName: String): Future[Boolean] = Future {
-    val result = consumer.readFormTopic(topicName)
+    val result = consumer.readFromTopic(topicName)
     println(s"Result length: ${result.length}")
     if (result.nonEmpty) {
       try {

@@ -55,7 +55,10 @@ libraryDependencies += "com.typesafe.play" %% "play-mailer-guice" % "8.0.1"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.20.13-play27",
-  "org.reactivemongo" %% "reactivemongo-akkastream" % "0.20.13"
+  "org.reactivemongo" %% "reactivemongo-akkastream" % "0.20.13",
+
+  "io.circe" %% "circe-core" % "0.14.1",
+  "io.circe" %% "circe-generic" % "0.14.1"
 )
 
 libraryDependencies += "redis.clients" % "jedis" % "3.7.0"

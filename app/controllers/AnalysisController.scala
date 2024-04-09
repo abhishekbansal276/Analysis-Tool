@@ -93,7 +93,7 @@ class AnalysisController @Inject()(
     userIdOption match {
       case Some(userId) =>
         val topicName = s"${userId}_${tableName.replaceAll(" ", "_").toLowerCase()}"
-        val dataInTopic = consumer.readFormTopic(topicName)
+        val dataInTopic = consumer.readFromTopic(topicName)
         if (dataInTopic.nonEmpty) {
           try {
             val spark = SparkSession.builder()

@@ -8,7 +8,7 @@
 # Authentication related routes
 
 GET     /authentication                                                         controllers.AuthenticationController.showAuthenticationForm
-POST    /sendOtp                                                               controllers.AuthenticationController.sendOtp
+POST    /sendOtp                                                                controllers.AuthenticationController.sendOtp
 POST    /processRegistration                                                    controllers.AuthenticationController.processRegistration(decryptOtp: String, decryptEmail: String, decryptPassword: String)
 GET     /otp-verification/:encryptOtp/:encryptEmail/:encryptPassword            controllers.AuthenticationController.showOtpForm(encryptOtp: String, encryptEmail: String, encryptPassword: String)
 POST    /login                                                                  controllers.AuthenticationController.login
@@ -54,3 +54,5 @@ GET     /profile                                                                
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 GET     /assets/temp/*file          controllers.Assets.at(path="/tmp", file)
+
+# Testing
