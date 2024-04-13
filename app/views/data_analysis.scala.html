@@ -1,0 +1,248 @@
+@(imageBytesList: Seq[Array[Byte]], analysisDone: Boolean, table_name: String)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@import play.filters.csrf.CSRF.Token
+@import views.html.helper.CSRF
+
+@main("Analysis Tool") {
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/analysis.css")">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+
+@if(analysisDone) {
+<div style="display: flex; position: fixed; right: 10px; bottom: 10px; flex-direction: column; align-items: center;">
+    <form action="@routes.DataController.sqlQueryPage(table_name, false)" method="get" onsubmit="disableUploadButtonOne()">
+        <button type="submit"
+                id="sqlBtn"
+                style="margin-bottom: 10px; cursor: pointer; padding: 10px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                class="sql-btn">
+            <i class="fas fa-database" style="color: white;"></i>
+        </button>
+    </form>
+
+    <form action="@routes.AnalysisController.reload(table_name)" method="post" onsubmit="disableUploadButton()">
+        @helper.CSRF.formField
+        <button type="submit"
+                id="reloadBtn"
+                style="cursor: pointer; padding: 10px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                class="sql-btn">
+            <i class="fas fa-redo-alt" style="color: white;"></i>
+        </button>
+    </form>
+</div>
+
+<div class="top-bar">
+    <div class="dropdown">
+        <button class="dropbtn"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="outer-dropdown">
+            <div class="dropdown-content">
+                @helper.form(action = routes.AddEntryController.showAddPage(table_name)) {
+                <button type="submit"
+                        style="cursor: pointer; margin-bottom: 5px; padding: 5px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                        class="add-btn">
+                    <i class="fas fa-plus-circle" style="color: white;"></i>
+                </button>
+                <span style="margin-left: 5px; color: white; font-size: 12px; background-color: #212D63; padding: 2px 5px; border-radius: 4px;">Add data</span>
+                }
+
+                @helper.form(action = routes.MapController.showMap(table_name)) {
+                <button type="submit"
+                        style="cursor: pointer; margin-bottom: 5px;  padding: 5px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                        class="map-btn">
+                    <i class="fas fa-map" style="color: white;"></i>
+                </button>
+                <span style="margin-left: 5px; color: white; font-size: 12px; background-color: #212D63; padding: 2px 5px; border-radius: 4px;">Show map</span>
+                }
+
+                @helper.form(action = routes.AnalysisController.downloadImages(table_name)) {
+                <button type="submit"
+                        style="cursor: pointer; margin-bottom: 5px;  padding: 5px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                        class="map-btn">
+                    <i class="fas fa-download" style="color: white;"></i>
+                </button>
+                <span style="margin-left: 5px; color: white; font-size: 12px; background-color: #212D63; padding: 2px 5px; border-radius: 4px;">Download images</span>
+                }
+
+                @helper.form(action = routes.AnalysisController.downloadCSV(table_name)) {
+                <button type="submit"
+                        style="cursor: pointer; margin-bottom: 5px;  padding: 5px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+                        class="map-btn">
+                    <i class="fas fa-file-csv" style="color: white;"></i>
+                </button>
+                <span style="margin-left: 5px; color: white; font-size: 12px; background-color: #212D63; padding: 2px 5px; border-radius: 4px;">Download CSV</span>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="first-row-grid">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("gender_vs_category_stacked", table_name)">
+                <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(0))"
+                     alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("occupation_count", table_name)">
+                <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(1))"
+                     alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_distribution_histogram", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(2))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("monthly_income_vs_gender_violin", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(10))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+
+    <div class="first-row-grid" style="margin-top: 10px;">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("monthly_income_distribution_probability", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(4))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_distribution_bar", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(3))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_vs_monthly_income_by_gender_scatter", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(13))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+
+    <div class="first-row-grid" style="margin-top: 10px;">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("occupation_within_gender_category", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(17))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+
+    <div class="first-row-grid" style="margin-top: 10px;">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_distribution_by_gender_stacked", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(6))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("gender_by_occupation_stacked", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(7))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_by_category_bar", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(9))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("category_distribution_pie", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(5))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+
+    <div class="first-row-grid" style="margin-top: 10px;">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("category_within_occupation", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(11))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("occupation_within_age_group", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(12))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("gender_within_category", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(14))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+
+    <div class="first-row-grid" style="margin-top: 10px;">
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("monthly_income_distribution_by_category_boxplot", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(15))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("age_distribution_vs_occupation_boxplot", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(8))"
+                 alt="Image">
+            </a>
+        </div>
+        <div class="grid-item">
+            <a href="@routes.AnalysisController.showInteractivePlot("occupation_within_category", table_name)">
+            <img src="data:image/png;base64,@javax.xml.bind.DatatypeConverter.printBase64Binary(imageBytesList(16))"
+                 alt="Image">
+            </a>
+        </div>
+    </div>
+</div>
+} else {
+<div style="display: flex; justify-content: center; color: #212D63; font-size: 15px; margin: 30px;">
+    Please wait! We are doing analysis on your data. Please refresh after some time.
+</div>
+
+<div class="load-wrapp">
+    <div class="load-1">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+</div>
+}
+
+<script>
+    function displayFileName() {
+        const fileInput = document.getElementById('jsonFile');
+        const fileNameContainer = document.getElementById('file-name');
+        if (fileInput.files.length > 0) {
+            fileNameContainer.textContent = `${fileInput.files[0].name}`;
+        } else {
+            fileNameContainer.textContent = '';
+        }
+    }
+
+    function disableUploadButton() {
+        document.getElementById("reloadBtn").disabled = true;
+        document.getElementById("reloadBtn").style.display = "none";
+    }
+
+    function disableUploadButtonOne() {
+        document.getElementById("sqlBtn").disabled = true;
+    }
+</script>
+
+</body>
+</html>
+}

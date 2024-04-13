@@ -1,0 +1,46 @@
+@(htmlString: String, tableName: String, error: Option[String])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/sql_page.css")">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <title>Your data</title>
+</head>
+<body>
+<div class="top">
+  @if(error.isDefined) {
+  <div class="alert" style="position: fixed; top: 5px; left: 50%; transform: translateX(-50%); z-index: 999; text-align: center;">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <span style="font-size: 14px;">@error.get</span>
+  </div>
+  }
+
+  <div class="sql-form">
+    @helper.form(action = routes.DataController.performSqlQuery(tableName, false), 'class -> "sql-form") {
+    <div class="form-group">
+      <textarea type="text" id="sqlquery" name="sqlquery" class="form-control" placeholder="Enter a SQL query" required style="width: 300px; padding: 5px; border: 1px solid #B993D6; border-radius: 5px; color: #8CA6DB; max-height: 60px;"></textarea>
+    </div>
+    @helper.CSRF.formField
+    <button type="submit" class="btn btn-primary" style="cursor: pointer; padding: 10px; margin-left: 10px; border: none; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); background: #212D63; color: white; border-radius: 5px; font-size: 12px;">EXECUTE</button>
+    }
+  </div>
+
+  <div style="margin-right: 10px; font-size: 15px;">Below are some entries from your data<br>Use 'data' as table name to execute query</div>
+</div>
+<div class="content-container">
+  @Html(htmlString)
+</div>
+
+@helper.form(action = routes.DataController.sqlQueryPage(tableName, true)) {
+<button type="submit"
+        style="position: fixed; bottom: 10px; right: 10px; cursor: pointer; padding: 5px; border:none; border-radius: 8px; box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); background-color: #212D63;"
+        class="map-btn">
+  <i class="fas fa-download fa-2x" style="color: white;"></i>
+</button>
+}
+
+</body>
+</html>
