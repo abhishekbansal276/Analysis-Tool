@@ -1,0 +1,53 @@
+@()(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/profile.css")">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+</head>
+<body>
+<div class="navbar-top">
+    <div class="title">
+        <u><h1>Profile</h1></u>
+    </div>
+    <ul>
+        <li>
+            @helper.form(action = routes.AuthenticationController.logout) {
+                @helper.CSRF.formField
+                <button type="submit" style="border: none; background: transparent; cursor: pointer;">
+                    <i class="fa fa-sign-out-alt fa-2x" style="color: white;"></i>
+                </button>
+            }
+        </li>
+    </ul>
+</div>
+
+<div class="sidenav">
+    <div class="profile" style="margin-bottom: 20px;">
+        <img src="@routes.Assets.versioned("images/profileimage.png")" alt="" width="100" height="100">
+    </div>
+</div>
+
+<div class="main">
+    <div class="card">
+        <p style="font-size: 15px;">Email: imdezcodegmail.com</p>
+        <button type="submit" style="background: #e8f5ff; padding: 10px; border: none; color: black; margin-top: 10px; border-radius: 10px; cursor: pointer;">Change Password</button>
+        <button type="submit" style="background: #e8f5ff; padding: 10px; border: none; color: black; margin-top: 10px; border-radius: 10px; cursor: pointer;">Change Image</button>
+    </div>
+
+    <h1 style="font-size: 20px; margin-bottom: 5px;">Your all data</h1>
+    <div class="card">
+        <div>
+            <p style="font-size: 15px;">Table Name</p>
+            <button type="submit" style="padding: 10px; border: none; color: black; margin-top: 10px; border-radius: 10px; cursor: pointer;"><i class="fas fa-trash-alt"></i></button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

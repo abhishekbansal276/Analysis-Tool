@@ -1,0 +1,118 @@
+@(error: Option[String])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@main("Analysis Tool") {
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/authentication.css")">
+    <title>Login</title>
+</head>
+
+<body>
+
+<div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+    <div class="loginbackground box-background--white padding-top--64">
+        <div class="loginbackground-gridContainer">
+            <div class="box-root flex-flex" style="grid-area: top / start / 8 / end;">
+                <div class="box-root" style="background-image: linear-gradient(white 0%, rgb(247, 250, 252) 33%); flex-grow: 1;">
+                </div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 4 / 2 / auto / 5;">
+                <div class="box-root box-divider--light-all-2 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 6 / start / auto / 2;">
+                <div class="box-root box-background--blue800" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 7 / start / auto / 4;">
+                <div class="box-root box-background--blue animationLeftRight" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 2 / 15 / auto / end;">
+                <div class="box-root box-background--cyan200 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 3 / 14 / auto / end;">
+                <div class="box-root box-background--blue animationRightLeft" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 4 / 17 / auto / 20;">
+                <div class="box-root box-background--gray100 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+            </div>
+            <div class="box-root flex-flex" style="grid-area: 5 / 14 / auto / 17;">
+                <div class="box-root box-divider--light-all-2 animationRightLeft tans3s" style="flex-grow: 1;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+        @if(error.isDefined) {
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <span style="font-size: 14px;">@error.get</span>
+        </div>
+        }
+
+        <div class="container" id="container">
+            <div class="form-container otp-sent">
+                @helper.form(action = routes.AuthenticationController.sendOtp) {
+                @helper.CSRF.formField
+                <form>
+                    <h1 style="color: #212D63">Create Account</h1>
+                    <span style="color: #212D63">Use your email for registration</span>
+                    <input type="email" placeholder="Email" name="email" required style="color: #212D63;">
+                    <input type="password" placeholder="Password" name="pwd" required style="color: #212D63;">
+                    <button type="submit">Sign Up</button>
+                </form>
+                }
+            </div>
+            <div class="form-container sign-in">
+                @helper.form(action = routes.AuthenticationController.login) {
+                @helper.CSRF.formField
+                <form>
+                    <h1 style="color: #212D63">Sign In</h1>
+                    <span style="color: #212D63">Use your email password</span>
+                    <input type="email" placeholder="Email" name="email" required style="color: #212D63;">
+                    <input type="password" placeholder="Password" name="pwd" required style="color: #212D63;">
+                    <a type="submit" href="@routes.AuthenticationController.showForgetPassword.url" style="color: #212D63;">Forget Your Password?</a>
+                    <button type="submit">Sign In</button>
+                </form>
+                }
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h1>Welcome Back!</h1>
+                        <p>Enter your personal details to use all site features</p>
+                        <button class="hidden" id="login">Sign In</button>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Register with your personal details to use all site features</p>
+                        <button class="hidden" id="sentOtp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const container = document.getElementById('container');
+    const sentOtpBtn = document.getElementById('sentOtp');
+    const loginBtn = document.getElementById('login');
+
+    sentOtpBtn.addEventListener('click', () => {
+        container.classList.add("active");
+    });
+
+    loginBtn.addEventListener('click', () => {
+        container.classList.remove("active");
+    });
+</script>
+
+</body>
+</html>
+}

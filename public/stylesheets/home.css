@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    background: -webkit-linear-gradient(to right, #5469D4, #212D63);
+    background: linear-gradient(to right, #5469D4, #212D63);
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: transparent;
+  position: fixed;
+}
+
+.card {
+  border-radius: 0px;
+  background-color: transparent;
+  padding: 15px;
+  align-items: center;
+  text-align: center;
+}
+
+#choose-file img {
+  width: 90px;
+  height: 90px;
+  background: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.buttons-container{
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.logo {
+    height: 70px;
+    width: 70px;
+    display: flex;
+    margin-bottom: 50px;
+    border-radius: 50%;
+    border: 1px solid black;
+    align-items: center;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.dropbtn{
+    border: none;
+    background-color: #212D63;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    color: white;
+    padding: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.main-dropdown{
+    display: none;
+    position: absolute;
+    margin-top: -60px;
+    padding-left: 80px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    width: 300px;
+    background-color: transparent;
+    z-index: 1;
+}
+
+.dropdown-content {
+    background-color: white;
+    z-index: 1;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.dropdown:hover .main-dropdown {
+    display: block;
+}
+
+.dropdown-content li {
+    text-decoration: none;
+    display: block;
+    color: white;
+}
+
+.choose-file-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.file-input {
+    display: none;
+}
+
+.choose-file-button label {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: white;
+    color: black;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file-name {
+    font-size: 12px;
+    text-align: center;
+    display: block;
+    margin-top: 15px;
+    color: #ccc;
+}
+
+#tableName {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    align-self: center;
+    margin-right: 10px;
+}
+
+.upload-button {
+    background-color: #5469D4;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    align-items: center;
+}
+
+.upload-button img {
+    height: 30px;
+    width: 30px;
+}
+
+.upload-button:hover, .choose-file-button label:hover {
+    box-shadow: none;
+}
+
+.alert {
+    background-color: #212D63;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin: 10px auto;
+    border-radius: 5px;
+    position: fixed;
+    top: 5px;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}

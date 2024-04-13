@@ -1,0 +1,93 @@
+@(tables: Seq[String], error: Option[String])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/home.css")">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+    @if(error.isDefined) {
+        <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <span style="font-size: 14px;">@error.get</span>
+    </div>
+    }
+
+    <div class="buttons-container">
+        <div class="dropdown">
+            <button class="dropbtn" style="cursor: pointer;"> > </button>
+            <div class="main-dropdown">
+                <div class="dropdown-content">
+                    @for(table <- tables) {
+                    <li>
+                        @helper.form(action = routes.AnalysisController.showAnalysisPage(table)) {
+                        <button type="submit" style="border: none; cursor:pointer; font-size: 13px; background: transparent; color: #212D63;">@table</button>
+                        }
+                    </li>
+                    <div style="border: 1px solid lightgrey; margin-bottom: 10px;"></div>
+                    }
+                    @helper.CSRF.formField
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            @helper.form(action = routes.ProfileController.showProfilePage) {
+            <button type="submit" id="profile-btn" style="background: transparent; border: none; cursor: pointer;">
+                <i class="fas fa-user-circle fa-2x" style="color: white;"></i>
+            </button>
+            }
+        </div>
+
+        <div style="margin-top: 15px;">
+            @helper.form(action = routes.AuthenticationController.logout) {
+            @helper.CSRF.formField
+            <button type="submit" id="logout-btn" style="background: transparent; border: none; cursor: pointer;">
+                <i class="fas fa-sign-out-alt fa-2x" style="color: white;"></i>
+            </button>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <form action="@routes.HomeController.uploadFile" method="post" enctype="multipart/form-data" onsubmit="disableUploadButton()">
+            @helper.CSRF.formField
+            <label for="jsonFile" id="choose-file"><i class="fas fa-cloud-upload-alt fa-5x" style="color: white; cursor: pointer;"></i></label>
+            <input type="file" name="jsonFile" id="jsonFile" accept=".json" class="file-input" onchange="displayFileName()" required>
+            <span id="file-name"></span>
+
+            <div style="display: flex;">
+                <input type="text" name="tableName" id="tableName" placeholder="Enter table name..." style="color: #212D63;" required>
+                <button type="submit" class="upload-button" id="uploadButton"><i class="fas fa-arrow-circle-right fa-2x"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function displayFileName() {
+        const input = document.getElementById('jsonFile');
+        const fileName = input.files[0].name;
+        document.getElementById('file-name').textContent = 'Selected File: ' + fileName;
+    }
+    function disableUploadButton() {
+        document.getElementById("uploadButton").disabled = true;
+        document.getElementById("uploadButton").style.display = "none";
+    }
+    document.getElementById("uploadForm").addEventListener("submit", function() {
+        disableUploadButton();
+    });
+    document.getElementById("uploadForm").addEventListener("load", function() {
+        document.getElementById("uploadButton").disabled = false;
+    });
+</script>
+</body>
+</html>
