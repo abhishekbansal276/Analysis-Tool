@@ -48,23 +48,17 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents,
   def uploadFile: Action[MultipartFormData[Files.TemporaryFile]] = Action.async(parse.multipartFormData) { request =>
     val tableName = request.body.dataParts("tableName").headOption.getOrElse("").replace(" ", "_").toLowerCase()
     val userId = request.session.get("userId").map(_.toLong).getOrElse(0L)
+    request.session.get("uploading") match {
+      case Some(_) =>
+        Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "Another file is uploading!"))
+      case None =>
+        request.body.file("jsonFile").map { filePart =>
+          val topicName = s"${userId}_$tableName"
+          val updatedSession = request.session + ("uploading" -> "true")
 
-    request.body.file("jsonFile").map { filePart =>
-      val topicName = s"${userId}_$tableName"
-      val jedis = new Jedis("localhost", 6379)
-      val lockKey = s"uploadFileLock:$userId"
-      val lockAcquired = jedis.setnx(lockKey, "locked") == 1
-
-      if (lockAcquired) {
-        try {
-          jedis.expire(lockKey, 600L)
           userDao.getNameOfTablesById(userId).flatMap {
             case Some(tableNames) if tableNames.contains(topicName) =>
-              if (jedis.isConnected) {
-                jedis.del(lockKey)
-                jedis.close()
-              }
-              Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> s"This name already exists! Choose another name."))
+              Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> s"This name already exists! Choose another name.").withSession(updatedSession))
 
             case _ =>
               val topicCreationAndInsertResult = myProducer.createTopicAndInsertData(topicName, filePart.ref.path.toFile.getAbsolutePath)
@@ -75,36 +69,17 @@ class HomeController @Inject()(val controllerComponents: ControllerComponents,
                 userUpdateResult <- updateUserTablesResult
               } yield {
                 if (topicResult && userUpdateResult) {
-                  Thread.sleep(5000)
                   Console.println("File Upload Successful")
                   analysisGenerateGraphsRDD.drawGraphs(topicName, userId.toString, tableName.replaceAll(" ", "_").toLowerCase())
-                  if (jedis.isConnected) {
-                    jedis.del(lockKey)
-                    jedis.close()
-                  }
-                  Redirect(routes.HomeController.home()).flashing("error" -> "File uploaded successfully.")
+                  Redirect(routes.HomeController.home()).flashing("error" -> "File uploaded successfully.").withSession(request.session - "uploading")
                 } else {
-                  if (jedis.isConnected) {
-                    jedis.del(lockKey)
-                    jedis.close()
-                  }
-                  Redirect(routes.HomeController.home()).flashing("error" -> "Failed to create topic or update user!")
+                  Redirect(routes.HomeController.home()).flashing("error" -> "Failed to create topic or update user!").withSession(request.session - "uploading")
                 }
               }
           }
-        } catch {
-          case ex: Exception =>
-            if (jedis.isConnected) {
-              jedis.del(lockKey)
-              jedis.close()
-            }
-            Future.failed(ex)
+        }.getOrElse {
+          Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "File upload failed!"))
         }
-      } else {
-        Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "Another file is uploading!"))
-      }
-    }.getOrElse {
-      Future.successful(Redirect(routes.HomeController.home()).flashing("error" -> "File upload failed!"))
     }
   }
 }

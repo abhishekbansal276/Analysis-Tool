@@ -1,8 +1,11 @@
 package utils.kafka_code
 
+import org.apache.kafka.clients.admin.{AdminClient, NewTopic}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.StringSerializer
+
 import java.util.Properties
+import scala.collection.JavaConverters.asJavaCollectionConverter
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
@@ -17,7 +20,7 @@ class MyProducer {
         producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getName)
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getName)
-
+        val adminClient: AdminClient = null
         producer = new KafkaProducer[String, String](producerProps)
 
         source.getLines().foreach { line =>
